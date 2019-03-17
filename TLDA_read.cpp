@@ -215,13 +215,3 @@ int read_process(string const path, string const name, int num_test) {
 		return -1;
 	}
 }
-
-//int main() {
-//	char path[] = "C:\\Users\\Mason\\Documents\\Project\\Data\\";
-//	char name[] = "*.txt";
-//	int ret;
-//	ret = read_from_text(path, name);
-//	int s = 1;
-//	convert_sparse(300);
-//	int ss = 1;
-//}
