@@ -3,15 +3,15 @@
 # include <stdlib.h>
 # include <cstring>
 # include <fstream>
-# include "TLDA_read.h"
+# include "TLDA.h"
 
 using namespace std;
 
-typedef map<string, vector< vector<string> > > TOTAL_WORD;
+typedef unordered_map <string, vector< vector<string> > > TOTAL_WORD;
 
 const char dilimiter[] = " ,./~!@#$%^&*-=+\\:';?<>()";
 
-SPARSE_DATA train_sparse_data, test_sparse_data;
+SPARSE_DATA train_sparse_data;
 COLUMN_INDEX column_index;
 static TOTAL_WORD total_word;
 static int total_transaction = 0;
@@ -79,10 +79,10 @@ vector <string> split(string &line) {
 	vector<string> final_words;
 
 	int length = words.size()+1;
-	char * token(new char[length]);
-	strcpy(token, words.c_str());
+	unique_ptr<char> token(new char[length]);
+	strcpy(token.get(), words.c_str());
 	char *temp_token;
-	temp_token = strtok(token, dilimiter);
+	temp_token = strtok(token.get(), dilimiter);
 	while (temp_token != NULL)
 	{
 		string temp_word;
@@ -92,7 +92,7 @@ vector <string> split(string &line) {
 			final_words.push_back(temp_word);
 
 			if (check_key(temp_word)) {
-				column_index.insert( COLUMN_INDEX::value_type(temp_word, (int)(column_index.size() + 1) ) );
+				column_index.insert( COLUMN_INDEX::value_type(temp_word, (int)(column_index.size()) ) );
 			}
 
 			total_count++;
@@ -101,7 +101,6 @@ vector <string> split(string &line) {
 		temp_token = strtok(NULL, dilimiter);
 	}
 
-	delete(token);
 	return final_words;
 }
 
@@ -141,14 +140,8 @@ void convert_sparse(int test_num) {
 		vector<int> train_data;
 		vector<int> train_indices;
 		vector<int> train_indptr;
+		vector<int> is_test;
 		train_indptr.push_back(0);
-
-		//initialize test data
-		SPARSE_LABEL temp_test_sparse;
-		vector<int> test_data;
-		vector<int> test_indices;
-		vector<int> test_indptr;
-		test_indptr.push_back(0);
 
 		int length_transation = total_word.at(it->first).size();
 		for (int i = 0; i < length_transation; i++) {
@@ -157,18 +150,10 @@ void convert_sparse(int test_num) {
 			vector<string> same_train_word;
 
 			if (test_count == pivot) {
-				vector<string> same_test_word;
-				for (int u = 0; u < temp_word_length; u++) {
-
-					if (count(same_test_word.begin(), same_test_word.end(), it->second.at(i).at(u)) == 0) {
-
-						test_data.push_back((int)count(it->second.at(i).begin(), it->second.at(i).end(), it->second.at(i).at(u)));
-						test_indices.push_back(column_index.at(it->second.at(i).at(u)));
-						same_test_word.push_back(it->second.at(i).at(u));
-					}
-
-				}
-				test_indptr.push_back((int)(test_indptr.back() + same_train_word.size()));
+				is_test.push_back(1);
+			}
+			else {
+				is_test.push_back(0);
 			}
 			for (int j = 0; j < temp_word_length; j++) {
 
@@ -188,16 +173,9 @@ void convert_sparse(int test_num) {
 			temp_train_sparse["data"] = train_data;
 			temp_train_sparse["indices"] = train_indices;
 			temp_train_sparse["indptr"] = train_indptr;
+			temp_train_sparse["test"] = is_test;
 
 			train_sparse_data.insert(SPARSE_DATA::value_type(it->first, temp_train_sparse));
-		}
-
-		if (test_data.size() > 0) {
-			temp_test_sparse["data"] = test_data;
-			temp_test_sparse["indices"] = test_indices;
-			temp_test_sparse["indptr"] = test_indptr;
-
-			test_sparse_data.insert(SPARSE_DATA::value_type(it->first, temp_test_sparse));
 		}
 	}
 }
