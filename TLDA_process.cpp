@@ -1,5 +1,4 @@
 # include "TLDA.h"
-# include <numeric>
 # include <random>
 
 using namespace std;
