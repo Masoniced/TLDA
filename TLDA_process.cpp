@@ -1,5 +1,9 @@
-# include "TLDA.h"
-# include <random>
+#include "TLDA_process.h"
+#include <random>
+#include <algorithm>
+#include <numeric>
+#include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -58,6 +62,7 @@ void TLDA::read_initialization(SPARSE_DATA const &data) {
 					}
 					else {
 						word_z.push_back(0);
+						//word_z.push_back(1);
 						Bg_sat[1] += 1;
 						int s = (int)it->second.at("indices").at(indptr.at(j));
 						Topic_feature_sat[sample_z][(int)it->second.at("indices").at(indptr.at(j))] += 1;
@@ -261,7 +266,6 @@ double TLDA::logloss_calculate(SPARSE_DATA const &data) {
 				int same_word = it->second.at("data").at(temp_indptr.at(j));
 				double temp = 0.0;
 				for (int k = 0; k < same_word; k++) {
-
 					double key_value = 0.0;
 					if (SAT_value.at(it->first).bg_z.at(i).at(j).at(k) == 1) {
 
@@ -294,7 +298,7 @@ double TLDA::logloss_calculate(SPARSE_DATA const &data) {
 }
 
 
-void TLDA::TLDA_MCMC(SPARSE_DATA const &data) {
+void TLDA::TLDA_MCMC(SPARSE_DATA const &data, int mode) {
 	read_initialization(train_sparse_data);
 	int iteration_count = 0;
 	double logloss = 0.0;
@@ -303,20 +307,50 @@ void TLDA::TLDA_MCMC(SPARSE_DATA const &data) {
 
 		logloss = update(data);
 		iteration_count++;
-		printf("--iteration %d --logloss %f", iteration_count, logloss);
+		printf("--Iteration %d --Perplexity %f \n", iteration_count, logloss);
 	}
+	get_final_parameters(mode);
 }
 
 
+void TLDA::get_final_parameters(int mode) {
+
+	final_Topic_sat = Topic_sat;
+	final_Topic_feature_sat = Topic_feature_sat;
+	final_Bg_feature_sat = Bg_feature_sat;
+	final_Bg_sat = Bg_sat;
+
+	vector<size_t> temp_topic_feature_word(num_feature);
+	vector<size_t> temp_bg_feature_word(num_feature);
+
+	for (int i = 0; i < num_topic; i++) {
+		temp_topic_feature_word = sort_indexes(final_Topic_feature_sat);
+		vector<string> temp_word(final_words_length);
+		for (int j = 0; j < final_words_length; j++) {
+			temp_word.at(j) = index_words.at(temp_topic_feature_word.at(j));
+		}
+
+		Topic_feature_words.insert(unordered_map<int, vector<string>>::value_type(i, temp_word));
+		if (mode == 1) {
+			Distance_correlation<int> discorr(final_Topic_feature_sat.at(i), final_Bg_feature_sat);
+			double dis_bg_topic = discorr.dist_corr();
+			discorr_bg_topic.push_back(dis_bg_topic);
+		}
+	}
+
+	temp_bg_feature_word = sort_indexes(Bg_feature_sat);
+	for (int s = 0; s < final_words_length; s++) {
+		string word = index_words.at(temp_bg_feature_word.at(s));
+		Bg_feature_words.push_back(word);
+	}
+}
+
 //int main() {
-//	string path = "C:\\Users\\Mason\\Documents\\Project\\Data\\";
-//	string name = "*.txt";
-//
+//	char path[] = "C:\\Users\\Mason\\Documents\\Project\\Data\\";
+//	char name[] = "*.txt";
 //	int ret;
-//	ret = read_process(path, name, 200);
-//	TLDA model(100, column_index.size(), 50, 100);
-//	model.TLDA_MCMC(train_sparse_data);
+//	ret = read_from_text(path, name);
 //	int s = 1;
-//
-//	return 0;
+//	convert_sparse(300);
+//	int ss = 1;
 //}
