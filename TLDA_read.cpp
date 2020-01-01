@@ -1,9 +1,12 @@
-# include <iostream>
-# include <io.h>
-# include <stdlib.h>
-# include <cstring>
-# include <fstream>
-# include "TLDA.h"
+# define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <io.h>
+#include <stdlib.h>
+#include <cstring>
+#include <fstream>
+#include <math.h>
+#include "TLDA_read.h"
 
 using namespace std;
 
@@ -71,10 +74,31 @@ int read_data(string const path, string const name) {
 }
 
 
+void check_upper(char *token) {
+
+	char c;
+	int i = 0;
+	while (token[i])
+	{
+		c = token[i];
+		if (isupper(c)) {
+			token[i] = tolower(c);
+		}
+		i++;
+	}
+}
+
+void check_in_total_word(const string token) {
+	if (column_index.find(token) == column_index.end()) {
+		column_index.insert(COLUMN_INDEX::value_type(token, (int)(column_index.size())));
+		index_words.insert(INDEX_COLUMN::value_type((int)(index_words.size()), token));
+	}
+}
+
 vector <string> split(string &line) {
 
 	void check_upper(char*);
-	bool check_key(const string &);
+	void check_in_total_word(const string &);
 	string words = line;
 	vector<string> final_words;
 
@@ -90,10 +114,7 @@ vector <string> split(string &line) {
 		temp_word = temp_token;
 		if (temp_word.size() > 0) {
 			final_words.push_back(temp_word);
-
-			if (check_key(temp_word)) {
-				column_index.insert( COLUMN_INDEX::value_type(temp_word, (int)(column_index.size()) ) );
-			}
+			check_in_total_word(temp_word);
 
 			total_count++;
 		}
@@ -102,29 +123,6 @@ vector <string> split(string &line) {
 	}
 
 	return final_words;
-}
-
-
-void check_upper(char *token) {
-
-	char c;
-	int i = 0;
-	while (token[i])
-	{
-		c = token[i];
-		if (isupper(c)) {
-			token[i] = tolower(c);
-		}
-		i++;
-	}
-}
-
-
-bool check_key(const string &key_name) {
-
-	bool ret;
-	ret = (column_index.find(key_name) == column_index.end());
-	return ret;
 }
 
 
@@ -193,3 +191,13 @@ int read_process(string const path, string const name, int num_test) {
 		return -1;
 	}
 }
+
+//int main() {
+//	char path[] = "C:\\Users\\Mason\\Documents\\Project\\Data\\";
+//	char name[] = "*.txt";
+//	int ret;
+//	ret = read_from_text(path, name);
+//	int s = 1;
+//	convert_sparse(300);
+//	int ss = 1;
+//}
