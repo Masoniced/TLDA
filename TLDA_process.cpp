@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 void TLDA::read_initialization(SPARSE_DATA const &data) {
 	// initialization the class parameters
 	Bg_feature_sat.assign(num_feature, 0);
@@ -344,13 +343,3 @@ void TLDA::get_final_parameters(int mode) {
 		Bg_feature_words.push_back(word);
 	}
 }
-
-//int main() {
-//	char path[] = "C:\\Users\\Mason\\Documents\\Project\\Data\\";
-//	char name[] = "*.txt";
-//	int ret;
-//	ret = read_from_text(path, name);
-//	int s = 1;
-//	convert_sparse(300);
-//	int ss = 1;
-//}
