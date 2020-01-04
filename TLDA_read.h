@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <string>
 #include <map>
+#include <fstream>
+#include <cmath>
 
 typedef std::unordered_map < std::string, std::vector<int> > SPARSE_LABEL;
 typedef std::unordered_map <std::string, SPARSE_LABEL > SPARSE_DATA;
