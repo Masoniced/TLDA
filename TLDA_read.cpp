@@ -1,11 +1,9 @@
-# define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
 #include <io.h>
 #include <stdlib.h>
 #include <cstring>
-#include <fstream>
-#include <math.h>
 #include "TLDA_read.h"
 
 using namespace std;
@@ -19,6 +17,7 @@ COLUMN_INDEX column_index;
 static TOTAL_WORD total_word;
 static int total_transaction = 0;
 static int total_count = 0;
+INDEX_COLUMN index_words;
 
 int read_from_text(string const path, string const name) {
 
@@ -97,8 +96,6 @@ void check_in_total_word(const string token) {
 
 vector <string> split(string &line) {
 
-	void check_upper(char*);
-	void check_in_total_word(const string &);
 	string words = line;
 	vector<string> final_words;
 
@@ -191,13 +188,3 @@ int read_process(string const path, string const name, int num_test) {
 		return -1;
 	}
 }
-
-//int main() {
-//	char path[] = "C:\\Users\\Mason\\Documents\\Project\\Data\\";
-//	char name[] = "*.txt";
-//	int ret;
-//	ret = read_from_text(path, name);
-//	int s = 1;
-//	convert_sparse(300);
-//	int ss = 1;
-//}
