@@ -63,7 +63,7 @@ double Distance_correlation<T>::dist_corr()
 				[length](double d1, double d2) {return d1 / length + d2; });
 		});
 
-		for (size_t i = 0; i < length; i++) {
+		for (int i = 0; i < length; i++) {
 			double temp_x = std::accumulate(x_dis_mat.at(i).begin(), x_dis_mat.at(i).end(), 0.0);
 			mean_vertical_x.at(i) = 1.0 * temp_x / length;
 
@@ -73,8 +73,8 @@ double Distance_correlation<T>::dist_corr()
 
 		mean_x = std::accumulate(mean_vertical_x.begin(), mean_vertical_x.end(), 0.0) / length;
 		mean_y = std::accumulate(mean_vertical_y.begin(), mean_vertical_y.end(), 0.0) / length;
-		for (size_t i = 0; i < length; i++) {
-			for (size_t j = 0; j < length; j++) {
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
 				x_dis_mat.at(i).at(j) = (x_dis_mat.at(i).at(j) - mean_vertical_x.at(i) - mean_horizontal_x.at(j) + mean_x);
 				y_dis_mat.at(i).at(j) = (y_dis_mat.at(i).at(j) - mean_vertical_y.at(i) - mean_horizontal_y.at(j) + mean_y);
 			}
@@ -84,8 +84,8 @@ double Distance_correlation<T>::dist_corr()
 		double decov2_xx = 0.0;
 		double decov2_yy = 0.0;
 
-		for (size_t i = 0; i < length; i++) {
-			for (size_t j = 0; j < length; j++) {
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
 				decov2_xy += x_dis_mat.at(i).at(j) * y_dis_mat.at(i).at(j);
 				decov2_xx += x_dis_mat.at(i).at(j) * x_dis_mat.at(i).at(j);
 				decov2_yy += y_dis_mat.at(i).at(j) * y_dis_mat.at(i).at(j);
@@ -134,3 +134,4 @@ struct less_second {
 };
 
 #endif
+
