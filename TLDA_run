@@ -34,7 +34,8 @@ void save_data(TLDA model, int mode) {
 }
 
 int main() {
-	string path, type_name, burn_in, num_topic, mode;
+	string path, type_name, burn_in, num_topic, mode, key_words;
+	int num_key_words;
 	cout << "Data Path Input: " << endl;
 	getline(cin, path);
 	cout << "Burn In Period: " << endl;
@@ -49,8 +50,17 @@ int main() {
 	type_name = "*.txt";
 	int ret = read_process(path, type_name, 100);
 	TLDA model(topic_n, column_index.size(), bi, 1000);
-	model.TLDA_MCMC(train_sparse_data, mode_i);
-	save_data(model, mode_i);
+	if (mode_i == 1) {
+		cout << "Setting Number of Top Key Words in Results: " << endl;
+		getline(cin, key_words);
+		int num_key_words = stoi(key_words, nullptr);
+		model.final_words_length = num_key_words;
+		model.TLDA_MCMC(train_sparse_data, 1);
+		save_data(model, 1);
+	}else {
+		model.TLDA_MCMC(train_sparse_data, mode_i);
+		save_data(model, mode_i);
+	}
 
 	return 0;
 }
