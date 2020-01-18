@@ -323,15 +323,22 @@ void TLDA::get_final_parameters(int mode) {
 	vector<size_t> temp_bg_feature_word(num_feature);
 
 	for (int i = 0; i < num_topic; i++) {
-		temp_topic_feature_word = sort_indexes(final_Topic_feature_sat);
+		temp_topic_feature_word = sort_indexes(final_Topic_feature_sat.at(i));
 		vector<string> temp_word(final_words_length);
 		for (int j = 0; j < final_words_length; j++) {
 			temp_word.at(j) = index_words.at(temp_topic_feature_word.at(j));
 		}
 
 		Topic_feature_words.insert(unordered_map<int, vector<string>>::value_type(i, temp_word));
-		if (mode == 1) {
-			Distance_correlation<int> discorr(final_Topic_feature_sat.at(i), final_Bg_feature_sat);
+		if (mode == 1 || mode == 0) {
+			vector<int> correlation_analysis_topic_word(dis_corr_length);
+			vector<int> correlation_analysis_Bg_word(dis_corr_length);
+
+			for (int m = 0; m < dis_corr_length; m++) {
+				correlation_analysis_topic_word.at(m) = final_Topic_feature_sat.at(i).at(temp_topic_feature_word.at(m));
+				correlation_analysis_Bg_word.at(m) = Bg_feature_sat.at(temp_topic_feature_word.at(m));
+			}
+			Distance_correlation<int> discorr(correlation_analysis_topic_word, correlation_analysis_Bg_word);
 			double dis_bg_topic = discorr.dist_corr();
 			discorr_bg_topic.push_back(dis_bg_topic);
 		}
