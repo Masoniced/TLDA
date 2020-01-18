@@ -52,7 +52,9 @@ private:
 
 
 public:
+	// Final result word length and distance correlation length for analysis
 	int final_words_length = 30;
+	int dis_corr_length = 100;
 	//Final Parameters
 	std::unordered_map<std::string, std::vector<int>> final_Topic_sat;
 	std::vector<std::vector<int>> final_Topic_feature_sat;
