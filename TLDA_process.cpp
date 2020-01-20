@@ -7,6 +7,10 @@
 
 using namespace std;
 
+random_device rd;
+mt19937 e2(rd());
+uniform_real_distribution<> dist(0, 1);
+
 void TLDA::read_initialization(SPARSE_DATA const &data) {
 	// initialization the class parameters
 	Bg_feature_sat.assign(num_feature, 0);
@@ -48,9 +52,6 @@ void TLDA::read_initialization(SPARSE_DATA const &data) {
 				int same_word = (int)it->second.at("data").at(indptr.at(j));
 				vector<int> word_z;
 				for (int u = 0; u < same_word; u++) {
-					random_device rd;
-					mt19937 e2(rd());
-					uniform_real_distribution<> dist(0, 1);
 					double r = dist(e2);
 
 					if (r > 0.5) {
@@ -96,12 +97,8 @@ void TLDA::read_initialization(SPARSE_DATA const &data) {
 
 
 int TLDA::sample_vec(vector<double> const &prob) {
-	random_device rd;
-	mt19937 e2(rd());
-	uniform_real_distribution<> dist(0, 1);
 	
 	double pivot = dist(e2) * prob.back();
-
 	auto const it = lower_bound(prob.begin(), prob.end(), pivot);
 	if (it == prob.end()) { return -1; }
 	int index = it - prob.begin();
