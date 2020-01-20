@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include <io.h>
-#include <stdlib.h>
-#include <cstring>
+#include <memory>
+#include <algorithm>
 #include "TLDA_read.h"
 
 using namespace std;
