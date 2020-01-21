@@ -15,7 +15,7 @@ TLDA: TLDA_run.o TLDA_process.o TLDA_read.o
 TLDA_run.o: TLDA_run.cpp TLDA_process.h
 	$(CXX) $(CXXFLAG) -c TLDA_run.cpp
 
-TLDA_process.o: TLDA_process.cpp TLDA_process.h
+TLDA_process.o: TLDA_process.cpp TLDA_process.h TLDA_utl.h
 	$(CXX) $(CXXFLAG) -c TLDA_process.cpp
 
 TLDA_read.o: TLDA_read.cpp TLDA_read.h
