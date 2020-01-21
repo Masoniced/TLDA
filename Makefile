@@ -12,7 +12,7 @@ CXXFLAG = -std=c++11 -Wall -O3
 TLDA: TLDA_run.o TLDA_process.o TLDA_read.o
 	$(CXX) $(CXXFLAG) -o TLDA TLDA_run.o TLDA_process.o TLDA_read.o
 
-TLDA_run.o: TLDA_run.cpp TLDA_run.h
+TLDA_run.o: TLDA_run.cpp TLDA_process.h
 	$(CXX) $(CXXFLAG) -c TLDA_run.cpp
 
 TLDA_process.o: TLDA_process.cpp TLDA_process.h
