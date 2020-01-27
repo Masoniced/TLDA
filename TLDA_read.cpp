@@ -4,6 +4,7 @@
 #include <io.h>
 #include <memory>
 #include <algorithm>
+#include <cstring>
 #include "TLDA_read.h"
 
 using namespace std;
