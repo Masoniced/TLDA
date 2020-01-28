@@ -36,7 +36,7 @@ int read_from_text(string const path, string const name) {
 
 	} while (!_findnext(handle, &fileinfo));
 
-	_findclose(handle);
+	_close(handle);
 
 	return 0;
 }
