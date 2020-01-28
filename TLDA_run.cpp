@@ -12,10 +12,10 @@ void save_data(TLDA model, int mode) {
 	myfile << "Topic Feature Words: \r\n";
 	myfile << "\r\n";
 	for (auto it = model.Topic_feature_words.begin(); it != model.Topic_feature_words.end(); it++) {
-		myfile << "Topic Number: " << it->first << ";\r\n";
+		myfile << "Topic Number: " << it->first << "; \r\n";
 		int word_length = model.Topic_feature_words.at(it->first).size();
 		for (int i = 0; i < word_length; i++) {
-			myfile << model.Topic_feature_words.at(it->first).at(i).c_str() << ";";
+			myfile << model.Topic_feature_words.at(it->first).at(i).c_str() << "; ";
 		}
 		if (mode == 1 || mode == 0) {
 			myfile << "Topic Background Distance Correlation: " << model.discorr_bg_topic.at(it->first);
@@ -28,7 +28,7 @@ void save_data(TLDA model, int mode) {
 	myfile << "Background Words: \r\n";
 	myfile << "\r\n";
 	for (int i = 0; i < bg_word_length; i++) {
-		myfile << model.Bg_feature_words.at(i).c_str() << ";";
+		myfile << model.Bg_feature_words.at(i).c_str() << "; ";
 	}
 	myfile << "\r\n";
 }
